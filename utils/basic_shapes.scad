@@ -20,13 +20,16 @@ module rounded_plate(length=0, width=0, thickness=0, radius=0, l=0, w=0, t=0, r=
     l1 = length_-2*radius_;
     l2 = width_-2*radius_;
     
-    hull(){
-        plate(length=l1, width=l2, thickness=thickness_);
-        translate([-l1/2, -l2/2, 0]) cylinder(r=radius_, h=thickness_);
-        translate([ l1/2, -l2/2, 0]) cylinder(r=radius_, h=thickness_);
-        translate([ l1/2,  l2/2, 0]) cylinder(r=radius_, h=thickness_);
-        translate([-l1/2,  l2/2, 0]) cylinder(r=radius_, h=thickness_);
-    }
+    if(radius_ == 0)
+        plate(l=l, w=w, t=t);
+    else
+        hull(){
+            plate(length=l1, width=l2, thickness=thickness_);
+            translate([-l1/2, -l2/2, 0]) cylinder(r=radius_, h=thickness_);
+            translate([ l1/2, -l2/2, 0]) cylinder(r=radius_, h=thickness_);
+            translate([ l1/2,  l2/2, 0]) cylinder(r=radius_, h=thickness_);
+            translate([-l1/2,  l2/2, 0]) cylinder(r=radius_, h=thickness_);
+        }
 }
 
 module tube(h=0, rin=0, rout=0, center=false, height=0, radius_in=0, radius_out=0){
