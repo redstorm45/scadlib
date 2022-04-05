@@ -7,9 +7,10 @@ use <../utils/common.scad>;
 
 // Local colors (approximate)
 
-COLOR_HOUSING = [0.1, 0.1, 0.9, 0.5];
+COLOR_HOUSING = [0.1, 0.1, 0.9, 0.7];
 COLOR_MOTOR = [0.6, 0.6, 0.6];
 COLOR_MOTOR_CAP = [0.1, 0.1, 0.1];
+COLOR_AXIS = [0.8, 0.8, 0.8];
 
 
 SERVO_AXIS_OFFSET = 22.5/2 - 11.6/2;
@@ -80,7 +81,12 @@ module servo_9g__potentiometer()
     color(COLOR_MOTOR_CAP) mirror([0, 0, 1]) translate([0, 0, 0.1]) cylinder(h=4, d=10);
 }
 
-module servo_9g()
+module servo_9g__axis()
+{
+    color(COLOR_AXIS) translate([0, 0, -4]) cylinder(d=4.6, h=7.2);
+}
+
+module servo_9g__parted()
 {
     translate([0, 0, -SERVO_HOUSING_TOP_HEIGHT]){
         translate([SERVO_AXIS_OFFSET + SERVO_MOTOR_OFFSET, 0, 0]) servo_9g__motor();
@@ -93,4 +99,34 @@ module servo_9g()
     }
 }
 
-servo_9g($fn=30);
+module servo_9g__block(){
+    color(COLOR_HOUSING) translate([5.35, 0, -26.7]) difference(){
+        union(){
+            plate(l=22.5, w=12.1, t=22.7);
+            translate([0, 0, 15.9]) plate(l=22.5+2*4.7, w=12, t=2.5);
+            translate([-11.25+5.9, 0, 21.7]) cylinder(d=11.6, h=5);
+            translate([11.25-10.3, 0, 21.7]) cylinder(d=5, h=5);
+        }
+        translate([-11.25-4.7+2.3, 0, 0]) cylinder(d=2, h=30);
+        translate([11.25+4.7-2.3, 0, 0]) cylinder(d=2, h=30);
+        translate([-11.25+5.9, 0, 18]) cylinder(d=4.61, h=30);
+    }
+}
+
+module servo_9g(simple=true)
+{
+    if(simple)
+        servo_9g__block();
+    else
+        servo_9g__parted();
+    servo_9g__axis();
+}
+
+
+module servo_9g__demo()
+{
+    translate([0, 0, 0]) servo_9g();
+    translate([0, 20, 0]) servo_9g(simple=false);
+}
+
+servo_9g__demo($fn=30);
