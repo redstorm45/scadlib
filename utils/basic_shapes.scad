@@ -3,6 +3,8 @@
 // Licensed under the MIT license. See LICENSE file in the project root for details.
 //
 
+use <operations.scad>;
+
 module plate(length=0, width=0, thickness=0, l=0, w=0, t=0){
     length_ =    (l>0)? l : length;
     width_ =     (w>0)? w : width;
@@ -46,9 +48,11 @@ module tube(h=0, rin=0, rout=0, center=false, height=0, radius_in=0, radius_out=
 
 module basic_shapes_demo()
 {
-    translate([0, 0, 0]) plate(l=10, width=5, t=1);
-    translate([0, 20, 0]) rounded_plate(length=10, w=5, t=1, r=1);
-    translate([0, 40, 0]) tube(h=10, rin=5, rout=6, center=true);
+    repeat_displace([0, 20, 0], center=true){
+        plate(l=10, width=5, t=1);
+        rounded_plate(length=10, w=5, t=1, r=1);
+        tube(h=10, rin=5, rout=6, center=true);
+    }
 }
 
 basic_shapes_demo($fn=30);
