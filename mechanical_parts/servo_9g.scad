@@ -104,8 +104,10 @@ module servo_9g__motor()
                 cube([8, 20, 30], center=true);
             }
             translate([0, 5.1, 11.5]) cube([1, 2.8, 2], center=true);
+            mirror_copy([1, 0, 0]) translate([4, 0, 11.5]) cube([2, 1.5, 2], center=true);
         }
         cylinder(d=3.8, h=3);
+        mirror_copy([0, 1, 0]) translate([0, 7.3/2, 11.8]) cube([1.5, 0.5, 4], center=true);
     }
     color(COLOR_MOTOR_CAP) translate([0, 0, -11.2]) mirror([0, 0, 1]) intersection(){
         cylinder(h=2, d=9.9);
