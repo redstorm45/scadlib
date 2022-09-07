@@ -14,6 +14,7 @@ COLOR_AXIS = [0.8, 0.8, 0.8];
 
 
 SERVO_AXIS_OFFSET = 22.5/2 - 11.6/2;
+SERVO_INTERNAL_AXIS_OFFSET = 6;
 SERVO_MOTOR_OFFSET = 20.6/2 - 8.1/2;
 SERVO_HOUSING_TOP_HEIGHT = 10.9;
 SERVO_HOUSING_CENTER_HEIGHT = 10.4;
@@ -58,6 +59,42 @@ module servo_9g__housing_bottom()
     }
 }
 
+module servo_9g__gear_train()
+{
+    module gear1(){
+        cylinder(d=2.3, h=1.8);
+    }
+    module gear2(){
+        union(){
+            cylinder(d=9.7, h=1.3);
+            cylinder(d=3.0, h=3.2);
+        }
+    }
+    module gear3(){
+        union(){
+            cylinder(d=9.8, h=1.6);
+            cylinder(d=2.9, h=4.1);
+        }
+    }
+    module gear4(){
+        union(){
+            cylinder(d=10.1, h=2.0);
+            cylinder(d=3.6, h=6.0);
+        }
+    }
+    module gear5(){
+        union(){
+            cylinder(d=9.9, h=3.1);
+            cylinder(d=4.9, h=8.1);
+        }
+    }
+    translate([SERVO_AXIS_OFFSET+SERVO_MOTOR_OFFSET, 0, 0.1]) gear1();
+    translate([SERVO_INTERNAL_AXIS_OFFSET, 0, 0.3]) gear2();
+    translate([0, 0, 1.7]) gear3();
+    translate([SERVO_INTERNAL_AXIS_OFFSET, 0, 3.6]) gear4();
+    translate([0, 0, 5.8]) gear5();
+}
+
 module servo_9g__motor()
 {
     color(COLOR_MOTOR) translate([0, 0, -0.2]) mirror([0, 0, 1]) union(){
@@ -66,7 +103,7 @@ module servo_9g__motor()
                 cylinder(h=11.2, d=10);
                 cube([8, 20, 30], center=true);
             }
-            translate([0, 4, 12]) cube([1, 5, 2], center=true);
+            translate([0, 5.1, 11.5]) cube([1, 2.8, 2], center=true);
         }
         cylinder(d=3.8, h=3);
     }
@@ -91,6 +128,7 @@ module servo_9g__parted()
     translate([0, 0, -SERVO_HOUSING_TOP_HEIGHT]){
         translate([SERVO_AXIS_OFFSET + SERVO_MOTOR_OFFSET, 0, 0]) servo_9g__motor();
         servo_9g__potentiometer();
+        servo_9g__gear_train();
         translate([SERVO_AXIS_OFFSET, 0, 0]) servo_9g__housing_center();
         translate([SERVO_AXIS_OFFSET, 0, 0]) servo_9g__housing_top();
     }
@@ -111,6 +149,7 @@ module servo_9g__block(){
         translate([11.25+4.7-2.3, 0, 0]) cylinder(d=2, h=30);
         translate([-11.25+5.9, 0, 18]) cylinder(d=4.61, h=30);
     }
+    servo_9g__axis();
 }
 
 module servo_9g(simple=true)
@@ -119,7 +158,6 @@ module servo_9g(simple=true)
         servo_9g__block();
     else
         servo_9g__parted();
-    servo_9g__axis();
 }
 
 
@@ -127,6 +165,7 @@ module servo_9g__demo()
 {
     translate([0, 0, 0]) servo_9g();
     translate([0, 20, 0]) servo_9g(simple=false);
+    translate([0, 40, 0]) servo_9g__motor();
 }
 
 servo_9g__demo($fn=30);
